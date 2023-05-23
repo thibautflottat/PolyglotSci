@@ -1,7 +1,7 @@
 using LinearAlgebra
 using Plots
-using Distributed
-using BenchmarkTools
+#using Distributed
+#using BenchmarkTools
 
 "Build Hamiltonian"
 function get_BHMF_ham(a, a_dag, n, t, mu, psi)
@@ -9,12 +9,12 @@ function get_BHMF_ham(a, a_dag, n, t, mu, psi)
 end
 
 "Find psi"
-function find_psi(a, a_dag, n, t, mu, initial_guess; tol=1e-2, iter=100)
+function find_psi(a, a_dag, n, t, mu, initial_guess; tol=1e-4, iter=500)
 
     _, vecs = get_BHMF_ham(a, a_dag, n, t, mu, initial_guess) |> eigen
     psi = transpose(vecs[:, 1]) * a * vecs[:, 1]
 
-    while psi - initial_guess > tol || iter != 0
+    while psi - initial_guess > tol && iter != 0
         _, vecs = get_BHMF_ham(a, a_dag, n, t, mu, initial_guess) |> eigen
         initial_guess = psi
         psi = transpose(vecs[:, 1]) * a * vecs[:, 1]
@@ -25,7 +25,7 @@ function find_psi(a, a_dag, n, t, mu, initial_guess; tol=1e-2, iter=100)
 end
 
 "Solves"
-function solve(; n_max=10, resolution=100, initial_guess=1)
+function solve(; n_max=50, resolution=500, initial_guess=1)
     # Create local operators
     a = diagm(1 => sqrt.(1:n_max))
     a_dag = transpose(a)
@@ -35,8 +35,8 @@ function solve(; n_max=10, resolution=100, initial_guess=1)
     mui = range(start=0, stop=3, length=resolution)
     psi_mat = Matrix{Float64}(undef, resolution, resolution)
 
-    # Threads.@threads for k2 in 1:resolution
-    @distributed for k2 in 1:resolution
+    Threads.@threads for k2 in 1:resolution
+    #@distributed for k2 in 1:resolution
             mu = mui[k2]
         for k1 in 1:resolution
           t = ti[k1]
@@ -60,4 +60,5 @@ function main()
     readline()
 end
 
-@benchmark solve()
+main()
+#@benchmark solve()
