@@ -1,0 +1,9 @@
+[package]
+name = "bose_hubbard"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+nalgebra = '0.32.2'
+iter_num_tools = "0.7.1"
+rayon = "1.7.0"
