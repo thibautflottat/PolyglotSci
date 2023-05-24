@@ -21,7 +21,7 @@ fn main() {
     let time = SystemTime::now();
     let answer = system.solve();
     let elapsed = time.elapsed().unwrap().as_secs();
-    println!("Solved in {elapsed} s\n");
+    println!("Solved in {elapsed} seconds\n");
 
     // Saving answer
     println!("Saving answer to ./answer.csv\n");
@@ -29,11 +29,11 @@ fn main() {
     for row in answer {
         let s = row
             .iter()
-            .map(|e| e.to_string())
+            .map(|e| format!("{e}"))
             .collect::<Vec<String>>()
             .join(" ");
         output.push_str(&s);
-        output.push_str("\n");
+        output.push('\n');
     }
     let mut file = File::create("answer.csv").unwrap();
     file.write_all(output.as_bytes()).unwrap();
@@ -85,8 +85,8 @@ impl System {
         let identity = DMatrix::<f64>::identity(self.n_max, self.n_max);
 
         // compute psi
-        let resolution = 500; // Number of points in the range
-        let mut psi_mat: Vec<Vec<f64>> = vec![vec![0.0; resolution]; resolution]; // 2D matrix for psi_mat
+        let mut psi_mat: Vec<Vec<f64>> = vec![vec![0.0; self.resolution]; self.resolution];
+        // let mut psi_mat = DMatrix::zeros(self.resolution, self.resolution);
 
         // Generate the range of values
         let ti: Vec<f64> = linspace(0.0, 0.05, self.resolution).collect();
@@ -113,22 +113,22 @@ impl System {
         n: &DMatrix<f64>,
         identity: &DMatrix<f64>,
     ) -> f64 {
-        let mut remaining_iter = self.iter;
-        let mut last_guess = self.initial_guess;
+        let mut iter = self.iter;
+        let mut guess = self.initial_guess;
 
         // Get BHMF Hamiltonian
-        let bhmf_ham = get_bhmf_ham(t, mu, last_guess, &a, &a_dag, &n, &identity);
+        let bhmf_ham = get_bhmf_ham(t, mu, guess, a, a_dag, n, identity);
         let eigenvector = get_eigen(bhmf_ham);
 
         // compute psi one time
         let mut psi = eigenvector.transpose() * a * eigenvector;
 
-        while (psi[0] - last_guess).abs() > self.tol && remaining_iter != 0 {
-            let bhmf_ham = get_bhmf_ham(t, mu, last_guess, &a, &a_dag, &n, &identity);
+        while (psi[0] - guess).abs() > self.tol && iter != 0 {
+            guess = psi[0];
+            let bhmf_ham = get_bhmf_ham(t, mu, guess, a, a_dag, n, identity);
             let eigenvector = get_eigen(bhmf_ham);
-            last_guess = psi[0];
             psi = eigenvector.transpose() * a * eigenvector;
-            remaining_iter -= 1;
+            iter -= 1;
         }
 
         psi[0]
