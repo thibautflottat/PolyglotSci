@@ -8,6 +8,9 @@ from scipy.optimize import minimize_scalar
 from joblib import Parallel, delayed
 import itertools  
 import matplotlib.pyplot as plt 
+import time
+
+s = time.time()
 
 class Models:
     def __init__(self, n_max):
@@ -36,20 +39,23 @@ class Models:
     
     def find_psi_variational(self, t, mu, initial_guess):
         w, v = self.full_ground_state(self.get_BHMF_ham(t, mu, initial_guess))
+        psi = v.T @ self.a @ v
 
-        psi = 0
-        for k in range(0, self.n_max):
-            psi += v[k]*v[k+1]*np.sqrt(k+1)
+        # psi = 0
+        # for k in range(0, self.n_max):
+        #     psi += v[k]*v[k+1]*np.sqrt(k+1)
         # psi *= 2
-        
-        while np.abs(psi - initial_guess) > 0.0001:
+        iter = 500
+        while np.abs(psi - initial_guess) > 0.0001 and iter != 0:
             # print(psi)
             initial_guess = psi
             w, v = self.full_ground_state(self.get_BHMF_ham(t, mu, initial_guess))
 
-            psi = 0
-            for k in range(0, self.n_max):    
-                psi += v[k]*v[k+1]*np.sqrt(k+1)
+            # psi = 0
+            # for k in range(0, self.n_max):    
+            #     psi += v[k]*v[k+1]*np.sqrt(k+1)
+            psi = v.T @ self.a @ v
+            iter -= 1
             # psi *= 2
 
         return psi
@@ -113,10 +119,10 @@ res = Parallel(n_jobs=8, verbose=10)(
     for block in blocks
 )
 res = np.absolute(flatten(res))
-
+print(time.time()-s)
 # res_reshaped = res.reshape((500, 500))
 
-# fig, ax = plt.subplots(1, 2)
-# ax[0].imshow(z.T, origin='lower', extent= [0, 0.4, 0, 3], aspect='auto')
-# ax[1].imshow(res_reshaped.T, origin='lower', extent= [0, 0.4, 0, 3], aspect='auto')
+# fig, ax = plt.subplots(1, 1)
+# # ax[0].imshow(z.T, origin='lower', extent= [0, 0.4, 0, 3], aspect='auto')
+# ax.imshow(res_reshaped.T, origin='lower', extent= [0, 0.4, 0, 3], aspect='auto')
 # plt.show()
