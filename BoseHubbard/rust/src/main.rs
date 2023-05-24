@@ -1,3 +1,5 @@
+// usage: `bose_hubbard < system.yaml`
+
 use std::{
     fs::File,
     io::{read_to_string, stdin, Write},
@@ -11,7 +13,8 @@ use serde::{Deserialize, Serialize};
 
 fn main() {
     // Reading system
-    let system = System::from_stdin();
+    let input = read_to_string(stdin().lock()).expect("could not read file");
+    let system = System::from_str(input);
     println!("\nParsed system:\n");
     system.show();
     println!();
@@ -52,9 +55,8 @@ struct System {
 
 impl System {
     /// Instantiates a `System` from a yaml string in stdin
-    fn from_stdin() -> Self {
-        let stdin = read_to_string(stdin().lock()).expect("could not read file");
-        serde_yaml::from_str(&stdin).expect("could not parse json file")
+    fn from_str(s: String) -> Self {
+        serde_yaml::from_str(&s).expect("could not parse json file")
     }
 
     /// Prints `System` to stout
@@ -97,45 +99,46 @@ impl System {
             let mu = mui[k2];
             row.iter_mut().enumerate().for_each(|(k1, psi)| {
                 let t = ti[k1];
-                *psi = self.find_psi(t, mu, &a, &a_dag, &n, &identity).abs();
+                *psi = find_psi(t, mu, &a, &a_dag, &n, &identity, self).abs();
             });
         });
 
         // return
         psi_mat
     }
+}
 
-    fn find_psi(
-        &self,
-        t: f64,
-        mu: f64,
-        a: &DMatrix<f64>,
-        a_dag: &DMatrix<f64>,
-        n: &DMatrix<f64>,
-        identity: &DMatrix<f64>,
-    ) -> f64 {
-        let mut iter = self.iter;
-        let mut guess = self.initial_guess;
+/// Find psi
+fn find_psi(
+    t: f64,
+    mu: f64,
+    a: &DMatrix<f64>,
+    a_dag: &DMatrix<f64>,
+    n: &DMatrix<f64>,
+    identity: &DMatrix<f64>,
+    system: &System,
+) -> f64 {
+    let mut iter = system.iter;
+    let mut guess = system.initial_guess;
 
-        // Get BHMF Hamiltonian
+    // Get BHMF Hamiltonian
+    let bhmf_ham = get_bhmf_ham(t, mu, guess, a, a_dag, n, identity);
+    let eigenvector = get_eigen(bhmf_ham);
+
+    // compute psi one time
+    let mut psi = eigenvector.transpose() * a * eigenvector;
+
+    // converge
+    while (psi[0] - guess).abs() > system.tol && iter != 0 {
+        guess = psi[0];
         let bhmf_ham = get_bhmf_ham(t, mu, guess, a, a_dag, n, identity);
         let eigenvector = get_eigen(bhmf_ham);
-
-        // compute psi one time
-        let mut psi = eigenvector.transpose() * a * eigenvector;
-
-        // converge
-        while (psi[0] - guess).abs() > self.tol && iter != 0 {
-            guess = psi[0];
-            let bhmf_ham = get_bhmf_ham(t, mu, guess, a, a_dag, n, identity);
-            let eigenvector = get_eigen(bhmf_ham);
-            psi = eigenvector.transpose() * a * eigenvector;
-            iter -= 1;
-        }
-
-        // return
-        psi[0]
+        psi = eigenvector.transpose() * a * eigenvector;
+        iter -= 1;
     }
+
+    // return
+    psi[0]
 }
 
 /// Builds Hamiltonian
