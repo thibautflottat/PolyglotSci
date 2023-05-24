@@ -1,8 +1,9 @@
 using LinearAlgebra
 using Plots
 using Dates
+using SharedArrays
+using Distributed
 
-#using Distributed
 #using BenchmarkTools
 
 "Build Hamiltonian"
@@ -35,10 +36,11 @@ function solve(; n_max=50, resolution=500, initial_guess=1)
 
     ti = range(start=0, stop=0.05, length=resolution)
     mui = range(start=0, stop=3, length=resolution)
-    psi_mat = Matrix{Float64}(undef, resolution, resolution)
-
-    Threads.@threads for k2 in 1:resolution
-    #@distributed for k2 in 1:resolution
+    # psi_mat = Matrix{Float64}(undef, resolution, resolution)
+    # psi_mat = SharedArray{Float64}(undef, resolution, resolution)
+    psi_mat = SharedArray{Float64, 2}((resolution, resolution))
+    # Threads.@threads for k2 in 1:resolution
+    @distributed for k2 in 1:resolution
         mu = mui[k2]
         for k1 in 1:resolution
           t = ti[k1]
