@@ -1,0 +1,6 @@
+# System example
+n_max: 50
+resolution: 500
+initial_guess: 1.0
+tol: 1E-4
+iter: 500
