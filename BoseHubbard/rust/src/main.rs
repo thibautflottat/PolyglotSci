@@ -29,7 +29,7 @@ fn main() {
     for row in answer {
         let s = row
             .iter()
-            .map(|e| format!("{e}"))
+            .map(|e| format!("{e:.3}"))
             .collect::<Vec<String>>()
             .join(" ");
         output.push_str(&s);
@@ -101,6 +101,7 @@ impl System {
             });
         });
 
+        // return
         psi_mat
     }
 
@@ -123,6 +124,7 @@ impl System {
         // compute psi one time
         let mut psi = eigenvector.transpose() * a * eigenvector;
 
+        // converge
         while (psi[0] - guess).abs() > self.tol && iter != 0 {
             guess = psi[0];
             let bhmf_ham = get_bhmf_ham(t, mu, guess, a, a_dag, n, identity);
@@ -131,6 +133,7 @@ impl System {
             iter -= 1;
         }
 
+        // return
         psi[0]
     }
 }
