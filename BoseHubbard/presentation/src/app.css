@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h1 {
+      @apply text-2xl;
+    }
+    h2 {
+      @apply text-xl text-blue-800;
+    }
+  }
+
+.center {
+    margin: 0 auto !important;
+}
+
+.reveal .fragment.highlight-current-blue.current-fragment {
+  @apply text-blue-300 !important;
+}
+
+h1, h2, h3 {
+@apply tracking-wide !important;
+}
+
+.link {
+  position: relative;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.link:before {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  left: 50%;
+  transform: translate3d(-50%, 0%, 0);
+  transition: all 0.3s ease;
+  transition-delay: 0.2s;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: #282828 transparent transparent transparent;
+}
+.link:after {
+  text-transform: none;
+  content: attr(data-tooltip);
+  font-size: 24px;
+  position: absolute;
+  color: #fff;
+  background: #282828;
+  padding: 8px 12px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 300px;
+  opacity: 0;
+  pointer-events: none;
+  left: 50%;
+  top: 0;
+  border-radius: 4px;
+  transform: translate3d(-50%, 0%, 0);
+  transition: all 0.3s ease;
+  transition-delay: 0.2s;
+}
+
+.link:hover:before, .link:hover:after {
+  opacity: 1;
+}
+.link:hover:before {
+  transform: translate3d(-50%, calc(-100% - 6px), 0);
+}
+.link:hover:after {
+  transform: translate3d(-50%, calc(-100% - 16px), 0);
+}
+
+#component-1 canvas, #component-2 canvas {
+  background-color: #191919 !important;
+}
