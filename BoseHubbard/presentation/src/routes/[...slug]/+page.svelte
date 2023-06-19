@@ -35,19 +35,54 @@
 			plugins
 		}}
 	>
-	<Slide id="fragments">
-		<h2 class="pt-[10%]"><span class="fragment highlight-current-blue" data-fragment-index="3">Investigating the influence of spacer length</span> on <span class="fragment highlight-current-blue" data-fragment-index="1">Anion Exchange Membranes</span> properties using <span class="fragment highlight-current-blue" data-fragment-index="2">reactive molecular dynamics</span></h2>
+	<Slide>
+		<h2 class="pt-[10%]">Rust</h2>
 		<hr class="border-2 border-blue-300" />
-		<p class="text-left text-3xl pt-20">Mateus Rodolfo<br />Thibaut Flottat<br />
+		<p class="text-left text-3xl pt-20">Mateus Rodolfo & Thibaut Flottat<br />
 		<em>23 juin 2023</em>
 		</p>
 		<img class="scale-75 !ml-[75%]" src="/img/log_simatlab_coul-removebg-preview.png" alt="logo" />
 	</Slide>
 
+	<Slide id="fragments">
+		<h3>Goals and motivation</h3>
+		<p class="text-left">Anion Exchange Membranes (AEM) are semipermeable membranes made of hydrophobic backbone and hydrophilic side chains (spacers) and designed to conduct anions (in our case $OH^-$). AEM are used as solid electrolyte in hydrogen fuel cells and water electrolysers.</p>
+
+		<div class="r-stack">
+		<img src="/aem.webp" class="fragment w-2/3 center fade-out current-visible" alt="aem" data-fragment-index="0" />
+		<div class="grid grid-cols-2 gap-4 fragment" data-fragment-index="1">
+			<h5>Pros</h5>
+			<h5>Cons</h5>
+			<ul class="fragment">
+				<li class="text-lime-300 text-4xl">High-cost noble metal catalyst ($Pt$) is not required</li>
+				<li class="text-lime-300 text-4xl">AEM based on aromatic polymer backbones</li>
+			</ul>
+			
+			<ul>
+				<li class="fragment text-red-300 text-4xl">Lower efficiency</li>
+				<li class="fragment text-red-300 text-4xl">Chemical deterioration (Hofmann elimination, nucleophilic substitution, E1 elimination)</li>
+			</ul>
+		</div>
+		</div>
+	</Slide>
+
+	<Slide>
+		
+		<Slide transition='fade'>
+			<h3>Ultra-cold atoms</h3>
+		</Slide>
+		<Slide transition='fade'>
+			<h3>Ultra-cold atoms on optical lattices</h3>
+		</Slide>
+		<Slide transition='fade'>
+			<h3>Bose-Hubbard Hamiltonian</h3>
+		</Slide>
+	</Slide>
+
+
 	<Slide>
 		<h3 class=" pt-[25%]">Thank you for your attention!</h3>
 	</Slide>
-
 
 	</RevealJsContext>
 	{/if}
