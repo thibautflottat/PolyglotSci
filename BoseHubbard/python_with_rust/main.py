@@ -1,27 +1,28 @@
 #!/usr/bin/env python
 
+# %% imports
 import sys
 import time
 import matplotlib.pyplot as plt
 import numpy as np
 from bose_hubbard import System
 
-# Reading system from yaml in stdin
+# %% Reading system from yaml in stdin
 system = System(sys.stdin.read())
 
-# Displaying system
+# %% Displaying system
 print("\nParsed system:\n")
 system.show()
 print()
 
-# Solving system
+# %% Solving system
 print("Solving...\n")
 start = time.time()
 answer = system.solve()
 elapsed = time.time() - start
 print(f"Solved in {elapsed:.0f} seconds\n")
 
-# Saving to ./answer.csv
+# %% Saving to ./answer.csv
 print("Saving answer to ./answer.csv\n")
 with open("answer.csv", "w") as f:
     for row in answer:
@@ -29,11 +30,13 @@ with open("answer.csv", "w") as f:
 
 print("Done")
 
-# Plotting
+# %% Plotting
 answer = np.loadtxt("answer.csv")
 
 fig, ax = plt.subplots()
 
-ax.imshow(answer)
+ax.imshow(answer, origin='lower')
 
 plt.show()
+
+# %%
