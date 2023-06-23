@@ -1,11 +1,11 @@
 fn main() {
-    let mut hello_world = String::from("Hello ");
+    let hello_world = String::from("Hello ");
 
-    append_world(&mut hello_world);
+    append_world(hello_world);
 
     println!("{hello_world}");
 }
 
-fn append_world(input: &mut String) {
+fn append_world(input: String) {
     input.push_str("World!");
 }
