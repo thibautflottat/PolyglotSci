@@ -26,14 +26,16 @@
 			<ul>
 				<li>Not even world class C++ programmers can avoid making these mistakes</li>
 			</ul>
-			<li class="pt-[1ex]">
-				Tony Hoare (most famous for his Quicksort algorithm) in 1964, stated his invention of null
-				references was a “billion dollar mistake”
-			</li>
-			<li class="pt-[1ex]">Memory leaks, allocation issues</li>
-			<ul>
-				<li>Possible alternative: garbage collection, but performance tradeoff</li>
-			</ul>
+			<div class="fragment">
+				<li class="pt-[1ex]">
+					Tony Hoare (most famous for his Quicksort algorithm) in 1964, stated his invention of null
+					references was a “billion dollar mistake”
+				</li>
+				<li class="pt-[1ex]">Memory leaks, allocation issues</li>
+				<ul>
+					<li>Possible alternative: garbage collection, but performance tradeoff</li>
+				</ul>
+			</div>
 			<li class="pt-[3ex] fragment">Worst than a crash: silent bug</li>
 			<div class="fragment">
 				<li class="pt-[3ex]">Why does it matter to us scientists?</li>
@@ -77,7 +79,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="container fragment" data-fragment-index="1">
+			<div class="container fragment">
 				<div class="col">
 					<img class="center" src="/img/survey.png" alt="survey" />
 				</div>
@@ -89,12 +91,21 @@
 		</div>
 	</Slide>
 	<Slide>
+		<h3>The Option type</h3>
+		<ul>
+			<li>Rust doesn't have a null type, it has Option(type)</li>
+			<li class="fragment">We can't use the Option type directly</li>
+			<ul class="fragment">
+				<li>Unwrap the option with possibility of runtime crash</li>
+				<li>Deal with the error inside the code</li>
+			</ul>
+			<li class="fragment">No more silent bugs!</li>
+		</ul>
+	</Slide>
+	<Slide transition="fade">
 		<h3>The borrowing system</h3>
-		<div class="r-stack">
-			<div class="container fragment">
-				<div class="col">
-					<Code id="code-animation" trim lineNumbers language="Rust">
-						{@html `
+		<Code trim lineNumbers language="rust">
+			{@html `
 fn main() {
     let hello_world = String::from("Hello ");
 
@@ -107,11 +118,10 @@ fn append_world(input: String) {
     input.push_str("World!");
 }
         `}
-					</Code>
-				</div>
-				<div class="col fragment">
-					<Code id="code-animation" trim lineNumbers>
-						{@html `
+		</Code>
+		<div class="fragment">
+			<Code trim lineNumbers>
+				{@html `
 error[E0596]: cannot borrow \`input\` as mutable, as it is not declared as mutable
   --> src/main.rs:10:5
    |
@@ -123,13 +133,13 @@ help: consider changing this to be mutable
 9  | fn append_world(mut input: String) {
    |                 +++
         `}
-					</Code>
-				</div>
-			</div>
-			<div class="container fragment">
-				<div class="col">
-					<Code id="code-animation" trim lineNumbers language="Rust">
-						{@html `
+			</Code>
+		</div>
+	</Slide>
+	<Slide transition="fade">
+		<h3>The borrowing system</h3>
+		<Code trim lineNumbers language="Rust">
+			{@html `
 fn main() {
     let hello_world = String::from("Hello ");
 
@@ -142,11 +152,10 @@ fn append_world(mut input: String) {
     input.push_str("World!");
 }
         `}
-					</Code>
-				</div>
-				<div class="col fragment">
-					<Code id="code-animation" trim lineNumbers>
-						{@html `
+		</Code>
+		<div class="fragment">
+			<Code trim lineNumbers>
+				{@html `
 error[E0382]: borrow of moved value: \`hello_world\`
  --> src/main.rs:6:15
   |
@@ -161,13 +170,13 @@ error[E0382]: borrow of moved value: \`hello_world\`
   |
 note: consider changing this parameter type in function \`append_world\` to borrow instead if owning the value isn't necessary
         `}
-					</Code>
-				</div>
-			</div>
-			<div class="container fragment">
-				<div class="col">
-					<Code id="code-animation" trim lineNumbers language="Rust">
-						{@html `
+			</Code>
+		</div>
+	</Slide>
+	<Slide transition="fade">
+		<h3>The borrowing system</h3>
+		<Code trim lineNumbers language="Rust">
+			{@html `
 fn main() {
     let hello_world = String::from("Hello ");
 
@@ -180,11 +189,11 @@ fn append_world(input: &String) {
     input.push_str("World!");
 }
         `}
-					</Code>
-				</div>
-				<div class="col fragment">
-					<Code id="code-animation" trim lineNumbers>
-						{@html `
+		</Code>
+		<div class="container">
+			<div class="fragment">
+				<Code trim lineNumbers>
+					{@html `
 error[E0596]: cannot borrow \`*input\` as mutable, as it is behind a \`&\` reference
   --> src/main.rs:10:5
    |
@@ -196,13 +205,14 @@ help: consider changing this to be a mutable reference
 9  | fn append_world(input: &mut String) {
    |                        ~~~~~~~~~~~
         `}
-					</Code>
-				</div>
+				</Code>
 			</div>
-			<div class="container fragment">
-				<div class="col">
-					<Code id="code-animation" trim lineNumbers language="Rust">
-						{@html `
+		</div>
+	</Slide>
+	<Slide transition="fade">
+		<h3>The borrowing system</h3>
+		<Code trim lineNumbers language="Rust">
+			{@html `
 fn main() {
     let hello_world = String::from("Hello ");
 
@@ -215,11 +225,11 @@ fn append_world(input: &mut String) {
     input.push_str("World!");
 }
         `}
-					</Code>
-				</div>
-				<div class="col fragment">
-					<Code id="code-animation" trim lineNumbers>
-						{@html `
+		</Code>
+		<div class="container">
+			<div class="fragment">
+				<Code trim lineNumbers>
+					{@html `
 error[E0596]: cannot borrow \`hello_world\` as mutable, as it is not declared as mutable
  --> src/main.rs:4:18
   |
@@ -231,13 +241,14 @@ help: consider changing this to be mutable
 2 |     let mut hello_world = String::from("Hello ");
   |         +++
         `}
-					</Code>
-				</div>
+				</Code>
 			</div>
-			<div class="container fragment">
-				<div class="col">
-					<Code id="code-animation" trim lineNumbers language="Rust">
-						{@html `
+		</div>
+	</Slide>
+	<Slide transition="fade">
+		<h3>The borrowing system</h3>
+		<Code trim lineNumbers language="Rust">
+			{@html `
 fn main() {
     let mut hello_world = String::from("Hello ");
 
@@ -250,18 +261,17 @@ fn append_world(input: &mut String) {
     input.push_str("World!");
 }
         `}
-					</Code>
-				</div>
-				<div class="col fragment">
-					<Code id="code-animation" trim lineNumbers>
-						{@html `
+		</Code>
+		<div class="container">
+			<div class="fragment">
+				<Code trim lineNumbers>
+					{@html `
 $ cargo run
     Finished dev [unoptimized + debuginfo] target(s) in 0.00s
      Running \`target/debug/mock\`
 Hello World!
         `}
-					</Code>
-				</div>
+				</Code>
 			</div>
 		</div>
 	</Slide>

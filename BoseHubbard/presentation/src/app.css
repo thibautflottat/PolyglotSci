@@ -19,6 +19,10 @@
   @apply text-blue-300 !important;
 }
 
+.reveal .code-wrapper code {
+  white-space: normal !important;
+}
+
 h1, h2, h3 {
 @apply tracking-wide !important;
 }
