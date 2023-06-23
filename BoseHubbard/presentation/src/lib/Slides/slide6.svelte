@@ -3,5 +3,5 @@
 </script>
 
 <Slide>
-    <h3 class=" pt-[25%]">Thank you for your attention!</h3>
+	<h3 class=" pt-[25%]">Thank you for your attention!</h3>
 </Slide>
