@@ -38,5 +38,3 @@ fig, ax = plt.subplots()
 ax.imshow(answer, origin='lower')
 
 plt.show()
-
-# %%

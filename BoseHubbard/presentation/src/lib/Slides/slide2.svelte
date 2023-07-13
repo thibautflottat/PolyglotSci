@@ -46,7 +46,7 @@
 			</div>
 		</ul>
 	</Slide>
-	<Slide>
+	<Slide transition="fade">
 		<h3>The Rust programming language</h3>
 		<ul>
 			<li>A system/general purpose programming language</li>
@@ -79,7 +79,15 @@
 					</ul>
 				</div>
 			</div>
-			<div class="container fragment">
+		</div>
+	</Slide>
+	<Slide transition="fade">
+		<h3>The Rust programming language</h3>
+		<ul>
+			<li>A system/general purpose programming language</li>
+			<li>Why Rust?</li>
+		</ul>
+			<div class="container">
 				<div class="col">
 					<img class="center" src="/img/survey.png" alt="survey" />
 				</div>
@@ -88,7 +96,6 @@
 					<img class="bottom fragment" src="/img/azure.png" alt="azure" />
 				</div>
 			</div>
-		</div>
 	</Slide>
 	<Slide>
 		<h3>The Option type</h3>
@@ -178,78 +185,6 @@ note: consider changing this parameter type in function \`append_world\` to borr
 		<Code trim lineNumbers language="Rust">
 			{@html `
 fn main() {
-    let hello_world = String::from("Hello ");
-
-    append_world(&hello_world);
-
-    println!("{hello_world}");
-}
-
-fn append_world(input: &String) {
-    input.push_str("World!");
-}
-        `}
-		</Code>
-		<div class="container">
-			<div class="fragment">
-				<Code trim lineNumbers>
-					{@html `
-error[E0596]: cannot borrow \`*input\` as mutable, as it is behind a \`&\` reference
-  --> src/main.rs:10:5
-   |
-10 |     input.push_str("World!");
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^ \`input\` is a \`&\` reference, so the data it refers to cannot be borrowed as mutable
-   |
-help: consider changing this to be a mutable reference
-   |
-9  | fn append_world(input: &mut String) {
-   |                        ~~~~~~~~~~~
-        `}
-				</Code>
-			</div>
-		</div>
-	</Slide>
-	<Slide transition="fade">
-		<h3>The borrowing system</h3>
-		<Code trim lineNumbers language="Rust">
-			{@html `
-fn main() {
-    let hello_world = String::from("Hello ");
-
-    append_world(&mut hello_world);
-
-    println!("{hello_world}");
-}
-
-fn append_world(input: &mut String) {
-    input.push_str("World!");
-}
-        `}
-		</Code>
-		<div class="container">
-			<div class="fragment">
-				<Code trim lineNumbers>
-					{@html `
-error[E0596]: cannot borrow \`hello_world\` as mutable, as it is not declared as mutable
- --> src/main.rs:4:18
-  |
-4 |     append_world(&mut hello_world);
-  |                  ^^^^^^^^^^^^^^^^ cannot borrow as mutable
-  |
-help: consider changing this to be mutable
-  |
-2 |     let mut hello_world = String::from("Hello ");
-  |         +++
-        `}
-				</Code>
-			</div>
-		</div>
-	</Slide>
-	<Slide transition="fade">
-		<h3>The borrowing system</h3>
-		<Code trim lineNumbers language="Rust">
-			{@html `
-fn main() {
     let mut hello_world = String::from("Hello ");
 
     append_world(&mut hello_world);
@@ -263,7 +198,7 @@ fn append_world(input: &mut String) {
         `}
 		</Code>
 		<div class="container">
-			<div class="fragment">
+			<div class="fragment center">
 				<Code trim lineNumbers>
 					{@html `
 $ cargo run
